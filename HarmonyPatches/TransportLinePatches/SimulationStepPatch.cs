@@ -95,11 +95,21 @@ namespace ImprovedPublicTransport2.HarmonyPatches.TransportLinePatches
 
             var stops1 = TransportManager.instance.m_lines.m_buffer[__state].m_stops;
             var stop1 = stops1;
-            do
+            int num4 = 0;
+            while (stop1 != 0)
             {
                 CachedNodeData.m_cachedNodeData[stop1].StartNewWeek();
                 stop1 = TransportLine.GetNextStop(stop1);
-            } while (stops1 != stop1 && stop1 != 0);
+                if (stop1 == stops1)
+                {
+                    break;
+                }
+                if (++num4 >= 32768)
+                {
+                    CODebugBase<LogChannel>.Error(LogChannel.Core, "Invalid list detected!\n" + Environment.StackTrace);
+                    break;
+                }
+            }
 
             var itemClass = TransportManager.instance.m_lines.m_buffer[__state].Info.m_class;
             var prefabs =

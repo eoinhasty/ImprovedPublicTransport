@@ -59,23 +59,28 @@ namespace ImprovedPublicTransport2.Data
           return false;
         }
         Utils.Log((object) ("Found vehicle data version: " + str));
-        while (index1 < Math.Min(data1.Length, CachedVehicleData.MaxVehicleCount))
+        while (index1 < data1.Length)
         {
           int index2 = SerializableDataExtension.ReadInt32(data1, ref index1);
           if (str == "v001")
           {
             int num = (int) SerializableDataExtension.ReadByte(data1, ref index1);
           }
-          data[index2].LastStopNewPassengers = SerializableDataExtension.ReadInt32(data1, ref index1);
-          data[index2].LastStopGonePassengers = SerializableDataExtension.ReadInt32(data1, ref index1);
-          data[index2].PassengersThisWeek = SerializableDataExtension.ReadInt32(data1, ref index1);
-          data[index2].PassengersLastWeek = SerializableDataExtension.ReadInt32(data1, ref index1);
-          data[index2].IncomeThisWeek = SerializableDataExtension.ReadInt32(data1, ref index1);
-          data[index2].IncomeLastWeek = SerializableDataExtension.ReadInt32(data1, ref index1);
-          data[index2].PassengerData = SerializableDataExtension.ReadFloatArray(data1, ref index1);
-          data[index2].IncomeData = SerializableDataExtension.ReadFloatArray(data1, ref index1);
+          
+          bool outOfBounds = index2 >= CachedVehicleData.MaxVehicleCount;
+          VehicleData temp = default;
+          ref VehicleData target = ref (outOfBounds ? ref temp : ref data[index2]);
+
+          target.LastStopNewPassengers = SerializableDataExtension.ReadInt32(data1, ref index1);
+          target.LastStopGonePassengers = SerializableDataExtension.ReadInt32(data1, ref index1);
+          target.PassengersThisWeek = SerializableDataExtension.ReadInt32(data1, ref index1);
+          target.PassengersLastWeek = SerializableDataExtension.ReadInt32(data1, ref index1);
+          target.IncomeThisWeek = SerializableDataExtension.ReadInt32(data1, ref index1);
+          target.IncomeLastWeek = SerializableDataExtension.ReadInt32(data1, ref index1);
+          target.PassengerData = SerializableDataExtension.ReadFloatArray(data1, ref index1);
+          target.IncomeData = SerializableDataExtension.ReadFloatArray(data1, ref index1);
           if (str != "v001" && str != "v002")
-            data[index2].CurrentStop = SerializableDataExtension.ReadUInt16(data1, ref index1);
+            target.CurrentStop = SerializableDataExtension.ReadUInt16(data1, ref index1);
         }
         return true;
       }
