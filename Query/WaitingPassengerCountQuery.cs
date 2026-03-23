@@ -47,7 +47,7 @@ namespace ImprovedPublicTransport2.Query
                         }
 
                         instanceID = (ushort)nextGridInstance;
-                        if (++num7 > 65536)
+                        if (++num7 > instance1.m_instances.m_buffer.Length)
                         {
                             CODebugBase<LogChannel>.Error(LogChannel.Core,
                                 "Invalid list detected!\n" + Environment.StackTrace);
